@@ -57,6 +57,7 @@ def split_data(test_ratio=0.2):
     test_files = fn_list[train_nums:]
     return train_files, test_files
 
+
 def read_all_data():
     fn_list = os.listdir(filepath)
     nums = len(fn_list)
@@ -69,6 +70,38 @@ def read_all_data():
         df_stock.append(df_stock_one_day)
     df_all_data = pd.concat(df_stock, axis=0)
     return df_all_data
+
+
+def save_train_test_data(save_all_data=True):
+    def save(fn_list, data_name):
+        saved_path = 'F:\GitHub\My_data_set\data'
+        df_stock = []
+        for f in fn_list:
+            filename = os.path.join(filepath, f)
+            df_stock_one_day = convert_time(filename, 'one')
+            df_stock_one_day = df_stock_one_day.loc[:,
+                               ['last_price', 'volume', 'open_interest', 'turnover', 'ask_price1', 'ask_volume1',
+                                'bid_price1', 'bid_volume1']]
+            df_stock.append(df_stock_one_day)
+        df_all_data = pd.concat(df_stock, axis=0)
+        print('Saving to {}'.format(data_name))
+        df_all_data.to_csv(path_or_buf=os.path.join(saved_path, data_name))
+        print('saved!')
+
+    if save_all_data:
+        fn_list = os.listdir(filepath)
+        save(fn_list, 'dataset.csv')
+    else:
+        train_files, test_files = split_data(test_ratio=0.2)
+        save(train_files, 'train.csv')
+        save(test_files, 'test.csv')
+
+
+def save_labels():
+    saved_path = 'F:\GitHub\My_data_set\data'
+    filename = os.path.join(saved_path, 'dataset.csv')
+    dataset = pd.read_csv(filepath_or_buffer=filename)
+    pass
 
 
 def plot_last_price():
@@ -97,9 +130,6 @@ def plot_last_price():
     plt.savefig(os.path.join(out_dir, pic_name), dpi=500)
     # plt.xticks([])
     plt.show()
-
-
-
 
 
 def plot_one_day_k():
@@ -165,4 +195,5 @@ if __name__ == '__main__':
     # convert_time(filename, 'sdf')
     # plot_k()
     # plot_one_day_k()
-    plot_last_price()
+    # plot_last_price()
+    save_train_test_data(save_all_data=False)
