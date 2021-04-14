@@ -32,7 +32,7 @@ class Fe_Dataset(Dataset):
 
         img = self.data[start_i:end_i,:]
         out_label = self.data[end_i + t -1 , label_i]
-        out_img = img
+        out_img = img[np.newaxis, :, :]
         return out_img, out_label
 
 
