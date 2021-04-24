@@ -93,16 +93,17 @@ class Quant_CNN(nn.Module):
         super(Quant_CNN, self).__init__()
         self.down1 = DownSample1()
         self.conv1 = Conv_Bn_Activation(64, 128, 3, 1, 'leaky')
-        self.conv2 = Conv_Bn_Activation(128, n_classes, 1, 1, 'linear', bn=False, bias=True)
-        # self.linear = nn.Linear(1, 1)
+        self.conv2 = Conv_Bn_Activation(128, 64, 1, 1, 'linear', bn=False, bias=True)
+        self.linear = nn.Linear(64*16, n_classes)
 
 
     def forward(self, input):
         d1 = self.down1(input)
         x1 = self.conv1(d1)
         x2 = self.conv2(x1)
-        # x3 = self.linear(x2)
-        return x2
+        x2 = torch.flatten(x2, start_dim=1)
+        x3 = self.linear(x2)
+        return x3
 
 if __name__ =='__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
