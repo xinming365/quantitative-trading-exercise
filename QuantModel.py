@@ -96,7 +96,6 @@ class Quant_CNN(nn.Module):
         self.conv2 = Conv_Bn_Activation(128, 64, 1, 1, 'linear', bn=False, bias=True)
         self.linear = nn.Linear(64*16, n_classes)
 
-
     def forward(self, input):
         d1 = self.down1(input)
         x1 = self.conv1(d1)
@@ -105,10 +104,31 @@ class Quant_CNN(nn.Module):
         x3 = self.linear(x2)
         return x3
 
+
+class Easy_CNN(nn.Module):
+    def __init__(self, n_classes):
+        super(Easy_CNN, self).__init__()
+        self.conv1 = Conv_Bn_Activation(1, 64, 3, 1, 'linear', bn=False, bias=True)
+        self.conv2 = Conv_Bn_Activation(64, 128, 3, 1, 'leaky', bn=False, bias=True)
+        self.conv3 = Conv_Bn_Activation(128, 64, 1, 1, 'linear', bn=False, bias=True)
+        self.linear = nn.Linear(4096, n_classes)
+
+    def forward(self, input):
+        x1 = self.conv1(input)
+        x2 = self.conv2(x1)
+        x3 = self.conv3(x2)
+        # print(x3.shape)
+        x4 = torch.flatten(x3, start_dim=1)
+        # print(x4.shape)
+        x5 = self.linear(x4)
+        return x5
+
+
 if __name__ =='__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
-    model = Quant_CNN(Cfg.n_classes).to(device)
+    # model = Quant_CNN(Cfg.n_classes).to(device)
+    model = Easy_CNN(Cfg.n_classes).to(device)
     print(model)
 
 

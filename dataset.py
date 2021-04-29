@@ -35,7 +35,6 @@ class Fe_Dataset(Dataset):
         time_range = self.cfg.time_range
         t = self.cfg.t
         label_i = self.cfg.label
-        out_img = np.zeros([time_range, self.cfg.w, 1])
         start_i = index
         end_i = start_i + time_range
 

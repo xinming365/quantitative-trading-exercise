@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 import os, sys, math
 from torch.nn import functional as F
 from cfg import Cfg
-from QuantModel import Quant_CNN
+from QuantModel import Quant_CNN, Easy_CNN
 from dataset import Fe_Dataset
 import logging
 
@@ -28,7 +28,8 @@ def train(save_cp=True):
 
     loss_func = nn.MSELoss()
     print(Cfg.n_classes)
-    model = Quant_CNN(Cfg.n_classes)
+    # model = Quant_CNN(Cfg.n_classes)
+    model = Easy_CNN(Cfg.n_classes)
 
     optimizer = torch.optim.Adam(
         model.parameters(),
@@ -36,7 +37,8 @@ def train(save_cp=True):
         betas=(0.9, 0.999),
         eps=1e-08,
     )
-    save_prefix = 'Quant_CNN'
+    # save_prefix = 'Quant_CNN'
+    save_prefix = 'Easy_CNN'
     model.to(device=device)
     model.train()
     for epoch in range(Cfg.epochs):
