@@ -105,6 +105,13 @@ class Quant_CNN(nn.Module):
         return x3
 
 
+class RNN_encoder(nn.Module):
+    def __init__(self):
+        super(RNN_encoder, self).__init__()
+        self.rnn = nn.GRU()
+        pass
+
+
 class Easy_CNN(nn.Module):
     def __init__(self, n_classes):
         super(Easy_CNN, self).__init__()
